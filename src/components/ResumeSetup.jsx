@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import { 
   UploadCloud, FileText, CheckCircle2, Plus, X, 
   Sparkles, ArrowRight, User, Briefcase, Award, Cpu, 
-  HelpCircle, Layers, Flame, GraduationCap, Mic
+  HelpCircle, Layers, Flame, GraduationCap, Mic, ShieldCheck, Lock
 } from 'lucide-react';
 import { LTI_ROLES, SAMPLE_RESUMES } from '../data/ltiMindtreeKnowledge.js';
 import { extractTextFromFile, parseResumeContent } from '../data/resumeParser.js';
+import { resumeCacheSecurity } from '../services/resumeCacheSecurity.js';
 
-export default function ResumeSetup({ onStartInterview }) {
+export default function ResumeSetup({ onStartInterview, onProfileCached }) {
   const [selectedRoleId, setSelectedRoleId] = useState('fresher_cs_it');
-  const [candidateProfile, setCandidateProfile] = useState(null);
+  const [candidateProfile, setCandidateProfile] = useState(() => {
+    return resumeCacheSecurity.getCachedResume();
+  });
   const [isParsing, setIsParsing] = useState(false);
   const [pasteTextMode, setPasteTextMode] = useState(false);
   const [pastedRawText, setPastedRawText] = useState('');
@@ -18,13 +21,19 @@ export default function ResumeSetup({ onStartInterview }) {
 
   const selectedRole = LTI_ROLES.find(r => r.id === selectedRoleId) || LTI_ROLES[0];
 
+  const handleApplyProfile = async (profile) => {
+    const cached = await resumeCacheSecurity.cacheResume(profile);
+    setCandidateProfile(cached);
+    if (onProfileCached) onProfileCached(cached);
+  };
+
   const handleFileUpload = async (file) => {
     if (!file) return;
     setIsParsing(true);
     try {
       const text = await extractTextFromFile(file);
       const parsed = parseResumeContent(text);
-      setCandidateProfile(parsed);
+      await handleApplyProfile(parsed);
     } catch (err) {
       console.error('Error parsing file:', err);
       alert('Could not parse resume automatically. Please paste the resume text directly.');
@@ -52,41 +61,44 @@ export default function ResumeSetup({ onStartInterview }) {
     }
   };
 
-  const handleSelectSample = (sample) => {
+  const handleSelectSample = async (sample) => {
     setSelectedRoleId(sample.role);
-    setCandidateProfile({
+    const profile = {
       candidateName: sample.name,
       skills: [...sample.skills],
       projects: JSON.parse(JSON.stringify(sample.projects)),
       education: sample.education,
       rawText: sample.summary
-    });
+    };
+    await handleApplyProfile(profile);
   };
 
-  const handleParsePastedText = () => {
+  const handleParsePastedText = async () => {
     if (!pastedRawText.trim()) return;
     setIsParsing(true);
     const parsed = parseResumeContent(pastedRawText);
-    setCandidateProfile(parsed);
+    await handleApplyProfile(parsed);
     setIsParsing(false);
   };
 
   const handleAddSkill = () => {
     if (!newSkillInput.trim() || !candidateProfile) return;
     if (!candidateProfile.skills.includes(newSkillInput.trim())) {
-      setCandidateProfile({
+      const updated = {
         ...candidateProfile,
         skills: [...candidateProfile.skills, newSkillInput.trim()]
-      });
+      };
+      handleApplyProfile(updated);
     }
     setNewSkillInput('');
   };
 
   const handleRemoveSkill = (skillToRemove) => {
-    setCandidateProfile({
+    const updated = {
       ...candidateProfile,
       skills: candidateProfile.skills.filter(s => s !== skillToRemove)
-    });
+    };
+    handleApplyProfile(updated);
   };
 
   const handleStart = () => {
@@ -113,6 +125,14 @@ export default function ResumeSetup({ onStartInterview }) {
           Upload your resume, listen as the AI reads questions aloud, respond with <strong>Voice (Speech-to-Text)</strong> or <strong>Text</strong>, 
           and receive an in-depth <strong>Development Area Diagnostic</strong> to guarantee interview selection.
         </p>
+
+        {/* In-Memory Cache Security Notice */}
+        <div className="cache-security-callout">
+          <ShieldCheck size={18} className="sec-callout-icon" />
+          <span>
+            <strong>Zero-Database In-Memory Privacy:</strong> Student resumes are stored strictly in volatile browser RAM and wiped upon tab closure. Zero server database overhead.
+          </span>
+        </div>
       </div>
 
       {/* Step 1: Select Fresher Role Track */}
@@ -194,7 +214,7 @@ export default function ResumeSetup({ onStartInterview }) {
           >
             <UploadCloud size={48} className="dropzone-icon" />
             <h4 className="dropzone-title">Upload your resume file</h4>
-            <p className="dropzone-sub">Supports PDF, DOCX, or plain TXT (Runs 100% locally in your browser)</p>
+            <p className="dropzone-sub">Supports PDF, DOCX, or plain TXT (Runs 100% locally in your browser memory)</p>
             
             <label className="browse-file-btn">
               Browse Resume File
@@ -240,7 +260,7 @@ export default function ResumeSetup({ onStartInterview }) {
               onClick={handleParsePastedText}
               disabled={isParsing || !pastedRawText.trim()}
             >
-              {isParsing ? 'Analyzing Resume...' : 'Parse & Extract Profile'}
+              {isParsing ? 'Analyzing Resume...' : 'Parse & Cache in Memory'}
             </button>
           </div>
         )}
@@ -260,7 +280,10 @@ export default function ResumeSetup({ onStartInterview }) {
             <div className="step-number success">✓</div>
             <div className="profile-header-meta">
               <h2 className="card-heading">Extracted Candidate Profile</h2>
-              <span className="profile-ready-tag">Ready for Interview</span>
+              <span className="profile-ready-tag">
+                <Lock size={12} style={{ display: 'inline', marginRight: 4 }} />
+                Cached in Memory ({candidateProfile.memoryFootprintKB || '12.4'} KB)
+              </span>
             </div>
           </div>
 

@@ -146,7 +146,7 @@ export const FRESHER_INTERVIEW_BLUEPRINT = [
     template: (candidate, role) => 
       `Welcome ${candidate.candidateName || 'there'}! I am your technical interviewer for LTIMindtree's Graduate Engineer Trainee (GET) panel. To start our conversation, could you please introduce yourself, share a brief overview of your academic background in ${candidate.education || 'engineering'}, and tell me what initially sparked your passion for software engineering?`,
     focusTopic: 'Self-Introduction, Spoken Fluency, Academic Journey, Career Motivation',
-    hint: 'Briefly mention: Your degree, college, key technical areas you enjoy (e.g. ' + (candidate.skills?.slice(0, 3).join(', ') || 'Java and SQL') + '), and your motivation to build enterprise systems.'
+    hint: 'Briefly mention: Your degree, college, key technical areas you enjoy (e.g. Java, OOPs, SQL), and your motivation to build enterprise systems.'
   },
   {
     step: 2,
@@ -155,7 +155,7 @@ export const FRESHER_INTERVIEW_BLUEPRINT = [
     title: 'Final Year / Academic Project Deep-Dive',
     template: (candidate, project) => 
       `In your resume, you have highlighted your project "${project.title}". Could you walk me through the high-level architecture of this application? Specifically, why did your team select ${project.tech?.join(', ') || 'this tech stack'}, and what was your exact personal contribution versus other team members?`,
-    focusTopic: `Architecture & Personal Module Ownership in ${project?.title || 'Academic Project'}`,
+    focusTopic: 'Architecture & Personal Module Ownership in Academic Project',
     hint: 'Explain: 1) What the project does, 2) The architecture (Frontend, Backend, Database), 3) The exact module YOU coded, and 4) Why you chose this technology over alternatives.'
   },
   {
@@ -199,3 +199,4 @@ export const FRESHER_INTERVIEW_BLUEPRINT = [
     hint: 'Demonstrate adaptability and excitement for continuous learning. Emphasize that you view learning new stacks as career growth, and confirm complete flexibility regarding shifts and relocation.'
   }
 ];
+

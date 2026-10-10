@@ -188,6 +188,19 @@ body {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
+.nav-security-btn {
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34D399;
+}
+
+.nav-security-btn:hover {
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.shield-icon {
+  color: #34D399;
+}
+
 .nav-icon-btn.muted {
   color: var(--rose);
   border-color: rgba(244, 63, 94, 0.3);
@@ -231,13 +244,13 @@ body {
 }
 
 /* ==========================================================================
-   Hero Section
+   Hero Section & Security Callout
    ========================================================================== */
 
 .hero-banner {
   text-align: center;
   max-width: 860px;
-  margin: 0 auto 40px;
+  margin: 0 auto 36px;
 }
 
 .hero-badge {
@@ -274,10 +287,29 @@ body {
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-muted);
+  margin-bottom: 16px;
 }
 
 .hero-description strong {
   color: #E2E8F0;
+}
+
+.cache-security-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+  padding: 9px 18px;
+  font-size: 13px;
+  color: #D1FAE5;
+  text-align: left;
+}
+
+.sec-callout-icon {
+  color: #34D399;
+  flex-shrink: 0;
 }
 
 /* ==========================================================================
@@ -643,6 +675,8 @@ body {
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .profile-details-grid {
@@ -2381,9 +2415,124 @@ body {
 }
 
 /* ==========================================================================
-   Settings Modal
+   Security Modal & Zero-DB Cache Styles
    ========================================================================== */
 
+.security-modal-card {
+  max-width: 580px;
+}
+
+.shield-icon-glow {
+  color: #10B981;
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+}
+
+.modal-header-sub {
+  font-size: 12px;
+  color: #94A3B8;
+}
+
+.security-banner-callout {
+  display: flex;
+  gap: 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.lock-icon {
+  color: #34D399;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.security-banner-callout strong {
+  font-size: 14px;
+  color: #A7F3D0;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.security-banner-callout p {
+  font-size: 12px;
+  color: #D1FAE5;
+  line-height: 1.45;
+}
+
+.security-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sec-stat-item {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sec-stat-label {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sec-stat-value {
+  font-size: 13px;
+  color: #E2E8F0;
+  font-weight: 600;
+}
+
+.sec-stat-value.success {
+  color: #34D399;
+}
+
+.sec-stat-value.highlight {
+  color: var(--cyan);
+}
+
+.sec-stat-value.mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #A5B4FC;
+}
+
+.security-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.purge-cache-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #FDA4AF;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.purge-cache-btn:hover {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: var(--rose);
+}
+
+/* Settings Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -2576,7 +2725,8 @@ body {
 
   .dev-grid-two-col,
   .t-feedback-columns,
-  .profile-details-grid {
+  .profile-details-grid,
+  .security-stats-grid {
     grid-template-columns: 1fr;
   }
 
